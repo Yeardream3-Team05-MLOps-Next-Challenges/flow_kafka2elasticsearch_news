@@ -72,7 +72,7 @@ jobs:
       uses: 8398a7/action-slack@v3
       with:
         status: ${{ job.status }}
-        author_name: GitHub Actions - deploy
+        author_name: GitHub Actions - build
         fields: repo,commit,message,author
         mention: here
         if_mention: failure,cancelled
@@ -113,7 +113,7 @@ jobs:
       uses: 8398a7/action-slack@v3
       with:
         status: ${{ job.status }}
-        author_name: GitHub Actions - prefect
+        author_name: GitHub Actions - deploy
         fields: repo,commit,message,author
         mention: here
         if_mention: failure,cancelled
