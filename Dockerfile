@@ -1,5 +1,5 @@
 # Dockerfile
-FROM prefecthq/prefect:2.18.3-python3.10
+FROM  python:3.10
 
 WORKDIR /app
 
