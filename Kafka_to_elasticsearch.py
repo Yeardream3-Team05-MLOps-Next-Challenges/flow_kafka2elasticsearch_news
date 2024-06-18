@@ -1,6 +1,6 @@
 from kafka import KafkaConsumer
 from elasticsearch import Elasticsearch
-from prefect import task, flow
+from prefect import task, Flow
 from datetime import timedelta, datetime
 from prefect.client.schemas.schedules import IntervalSchedule
 import json
@@ -34,7 +34,7 @@ def send_to_elasticsearch(data):
 
 def etl_flow():
     schedule = IntervalSchedule(interval=timedelta(minutes=1))
-    with flow("Kafka to Elasticsearch", schedule=schedule) as flow:
+    with Flow("Kafka to Elasticsearch", schedule=schedule) as flow:
         data = consume_kafka_data()
         send_to_elasticsearch(data)
     return flow
