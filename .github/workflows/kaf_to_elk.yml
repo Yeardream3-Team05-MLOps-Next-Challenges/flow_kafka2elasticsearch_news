@@ -1,4 +1,4 @@
-name: Kafka to Elasticsearch CICD
+name: kafka to elasticsearch CICD
 
 on:
   push:
