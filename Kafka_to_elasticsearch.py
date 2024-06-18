@@ -34,7 +34,7 @@ def send_to_elasticsearch(data):
 
 def etl_flow():
     schedule = IntervalSchedule(interval=timedelta(minutes=1))
-    with Flow("Kafka to Elasticsearch", schedule=schedule) as flow:
+    with flow("Kafka to Elasticsearch", schedule=schedule) as flow:
         data = consume_kafka_data()
         send_to_elasticsearch(data)
     return flow
