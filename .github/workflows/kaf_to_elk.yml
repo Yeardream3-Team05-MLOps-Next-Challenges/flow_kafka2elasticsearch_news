@@ -22,7 +22,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/${{ github.repository }}/kafka-to-elasticsearch:${{ github.sha }}
+        tags: ghcr.io/${{ github.repository }}/kafka-to-elasticsearch:${{ github.sha | lower }}
 
   deploy:
     needs: build-and-push
@@ -56,7 +56,7 @@ jobs:
           docker run -d --name kafka_to_elasticsearch -e SERVER_HOST=${{ secrets.SERVER_HOST }} \
                                                       -e PREFECT_API_URL=${{ secrets.PREFECT_API_URL }} \
                                                       -e SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }} \
-                                                      ghcr.io/${{ github.repository }}/kafka_to_elasticsearch:${{ github.sha }}
+                                                      ghcr.io/${{ github.repository }}/kafka_to_elasticsearch:${{ github.sha | lower }}
 
   prefect:
     needs: deploy
