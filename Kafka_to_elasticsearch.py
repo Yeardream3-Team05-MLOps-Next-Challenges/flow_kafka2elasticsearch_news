@@ -1,6 +1,4 @@
 from kafka import KafkaConsumer
-from prefect import task, Flow
-from prefect.schedules import IntervalSchedule
 from datetime import timedelta
 import json
 from hashlib import sha256
