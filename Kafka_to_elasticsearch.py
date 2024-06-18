@@ -32,11 +32,13 @@ def send_to_elasticsearch(data):
         if not es.exists(index="news1", id=record['_id']):
             es.index(index="news1", id=record['_id'], body=record)
 
-schedule = IntervalSchedule(interval=timedelta(minutes=1))
-
-with Flow("Kafka to Elasticsearch", schedule=schedule) as flow:
-    data = consume_kafka_data()
-    send_to_elasticsearch(data)
+def etl_flow():
+    schedule = IntervalSchedule(interval=timedelta(minutes=1))
+    with Flow("Kafka to Elasticsearch", schedule=schedule) as flow:
+        data = consume_kafka_data()
+        send_to_elasticsearch(data)
+    return flow
 
 if __name__ == "__main__":
+    flow = etl_flow()
     flow.run()
