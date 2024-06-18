@@ -1,4 +1,4 @@
-name: kafka to elasticsearch CICD
+name: Kafka to Elasticsearch CICD
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,14 +17,26 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v3
+    - name: Build Docker image
+      run: docker build -t myapp .
+
+    - name: Run Docker container
+      run: docker run -d myapp
+
+    - name: action-slack
+      uses: 8398a7/action-slack@v3
       with:
-        context: .
-        push: true
+        status: ${{ job.status }}
+        author_name: GitHub Actions - build
+        fields: repo,commit,message,author
+        mention: here
+        if_mention: failure,cancelled
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: always()
 
   deploy:
-    needs: build-and-push
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +47,7 @@ jobs:
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key: ${{ secrets.KEY }}
         source: "."
         target: "~/docker/kafka_to_elasticsearch/"
 
@@ -54,7 +66,19 @@ jobs:
           docker stop kafka_to_elasticsearch || true
           docker run -d --name kafka_to_elasticsearch -e SERVER_HOST=${{ secrets.SERVER_HOST }} \
                                                       -e PREFECT_API_URL=${{ secrets.PREFECT_API_URL }} \
-                                                      -e SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }} \
+                                                      -e SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}
+
+    - name: action-slack
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        author_name: GitHub Actions - deploy
+        fields: repo,commit,message,author
+        mention: here
+        if_mention: failure,cancelled
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: always()
 
   prefect:
     needs: deploy
