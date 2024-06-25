@@ -1,8 +1,7 @@
 from kafka import KafkaConsumer
 from elasticsearch import Elasticsearch
 from prefect import task, Flow
-from datetime import timedelta, datetime
-from prefect.client.schemas.schedules import IntervalSchedule
+from prefect.schedules import CronSchedule
 import json
 from hashlib import sha256
 import os
@@ -33,7 +32,7 @@ def send_to_elasticsearch(data):
             es.index(index="news1", id=record['_id'], body=record)
 
 def etl_flow():
-    schedule = IntervalSchedule(interval=timedelta(minutes=1))
+    schedule = CronSchedule("0 * * * *")  # 매 시간마다 실행
     with Flow("Kafka to Elasticsearch", schedule=schedule) as flow:
         data = consume_kafka_data()
         send_to_elasticsearch(data)
@@ -41,4 +40,4 @@ def etl_flow():
 
 if __name__ == "__main__":
     flow = etl_flow()
-    flow.run()
+    flow.register(project_name="kafka-to-elasticsearch")
