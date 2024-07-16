@@ -4,11 +4,9 @@ from hashlib import sha256
 import logging
 from kafka import KafkaConsumer, errors as kafka_errors
 from elasticsearch import Elasticsearch, exceptions as es_exceptions
-from prefect import task, Flow
-#from prefect.schedules import CronSchedule
-from prefect.orion.schemas.schedules import CronSchedule
-
-
+from prefect import task, flow
+from prefect.orion.schemas.schedules import IntervalSchedule
+from datetime import timedelta
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -41,21 +39,15 @@ def consume_kafka_data():
 @task
 def send_to_elasticsearch(data):
     es = Elasticsearch([{'host': SERVER_HOST, 'port': 19200}])
-    try:
-        for record in data:
-            record_id = sha256(json.dumps(record, sort_keys=True).encode()).hexdigest()
-            if not es.exists(index="news", id=record_id):
-                es.index(index="news", id=record_id, body=record)
-    except es_exceptions.ElasticsearchException as e:
-        logging.error(f"Error in indexing data: {e}")
+    for record in data:
+        record_id = sha256(json.dumps(record, sort_keys=True).encode()).hexdigest()
+        if not es.exists(index="news", id=record_id):
+            es.index(index="news", id=record_id, body=record)
 
-def etl_flow():
-    schedule = CronSchedule("0 * * * *")  # Every hour
-    with Flow("Kafka to Elasticsearch", schedule=schedule) as flow:
-        data = consume_kafka_data()
-        send_to_elasticsearch(data)
-    return flow
+@flow(schedule=IntervalSchedule(interval=timedelta(hours=1)))
+def kafka_to_elasticsearch_flow():
+    data = consume_kafka_data()
+    send_to_elasticsearch(data)
 
 if __name__ == "__main__":
-    flow = etl_flow()
-    flow.register(project_name="kafka_to_elasticsearch")
+    kafka_to_elasticsearch_flow()
