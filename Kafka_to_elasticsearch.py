@@ -4,8 +4,9 @@ from hashlib import sha256
 import logging
 from kafka import KafkaConsumer, errors as kafka_errors
 from elasticsearch import Elasticsearch, exceptions as es_exceptions
-from prefect import task, flow
-from prefect.orion.schemas.schedules import IntervalSchedule
+#from prefect.orion.schemas.schedules import IntervalSchedule
+from prefect import flow, task
+from prefect.schedules import CronSchedule
 from datetime import timedelta
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
