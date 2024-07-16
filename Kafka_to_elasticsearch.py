@@ -10,7 +10,7 @@ from prefect.schedules import CronSchedule
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 SERVER_HOST = os.getenv('SERVER_HOST')
-KAFKA_TOPIC = 'news1'
+KAFKA_TOPIC = 'news_1'
 KAFKA_GROUP_ID = 'consumer-group1'
 BATCH_SIZE = 100  # Number of messages to process per batch
 
@@ -41,8 +41,8 @@ def send_to_elasticsearch(data):
     try:
         for record in data:
             record_id = sha256(json.dumps(record, sort_keys=True).encode()).hexdigest()
-            if not es.exists(index="news1", id=record_id):
-                es.index(index="news1", id=record_id, body=record)
+            if not es.exists(index="news", id=record_id):
+                es.index(index="news", id=record_id, body=record)
     except es_exceptions.ElasticsearchException as e:
         logging.error(f"Error in indexing data: {e}")
 
