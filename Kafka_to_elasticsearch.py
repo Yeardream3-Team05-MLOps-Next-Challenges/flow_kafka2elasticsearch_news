@@ -5,7 +5,10 @@ import logging
 from kafka import KafkaConsumer, errors as kafka_errors
 from elasticsearch import Elasticsearch, exceptions as es_exceptions
 from prefect import task, Flow
-from prefect.schedules import CronSchedule
+#from prefect.schedules import CronSchedule
+from prefect.orion.schemas.schedules import CronSchedule
+
+
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
