@@ -4,9 +4,7 @@ from hashlib import sha256
 import logging
 from kafka import KafkaConsumer, errors as kafka_errors
 from elasticsearch import Elasticsearch, exceptions as es_exceptions
-#from prefect.orion.schemas.schedules import IntervalSchedule
 from prefect import flow, task
-from prefect.schedules import CronSchedule
 from datetime import timedelta
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -45,7 +43,7 @@ def send_to_elasticsearch(data):
         if not es.exists(index="news", id=record_id):
             es.index(index="news", id=record_id, body=record)
 
-@flow(schedule=IntervalSchedule(interval=timedelta(hours=1)))
+@flow(schedule=timedelta(hours=1))
 def kafka_to_elasticsearch_flow():
     data = consume_kafka_data()
     send_to_elasticsearch(data)
