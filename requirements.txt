@@ -5,5 +5,4 @@ kafka-python==2.0.2
 requests
 prefect==2.17.1
 python-dotenv
-prefect
 elasticsearch
