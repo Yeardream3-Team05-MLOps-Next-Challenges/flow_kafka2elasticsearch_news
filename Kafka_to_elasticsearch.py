@@ -5,7 +5,7 @@ import logging
 from kafka import KafkaConsumer, errors as kafka_errors
 from elasticsearch import Elasticsearch, exceptions as es_exceptions
 from prefect import flow, task
-from datetime import timedelta
+from prefect.client.schemas.schedules import CronSchedule
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -43,7 +43,7 @@ def send_to_elasticsearch(data):
         if not es.exists(index="news", id=record_id):
             es.index(index="news", id=record_id, body=record)
 
-@flow(schedule=timedelta(hours=1))  # 매시간마다 실행
+@flow(schedule=(CronSchedule(cron="0 8 * * *", timezone="Asia/Seoul")))
 def kafka_to_elasticsearch_flow():
     data = consume_kafka_data()
     send_to_elasticsearch(data)
