@@ -43,7 +43,7 @@ def send_to_elasticsearch(data):
         if not es.exists(index="news", id=record_id):
             es.index(index="news", id=record_id, body=record)
 
-@flow(schedule=cron("0 8 * * *", tz="Asia/Seoul"))
+@flow
 def kafka_to_elasticsearch_flow():
     data = consume_kafka_data()
     send_to_elasticsearch(data)
