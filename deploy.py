@@ -1,27 +1,18 @@
 import os
-from prefect import flow
-from prefect.deployments import DeploymentImage
-from prefect.client.schemas.schedules import CronSchedule
+from prefect.deployments import DeploymentSpec
+from prefect.orion.schemas.schedules import CronSchedule
+from datetime import timedelta
+from Kafka_to_elasticsearch import kafka_to_elasticsearch_flow
 
-from kafka_to_elasticsearch_flow import kafka_to_elasticsearch_flow 
-
-
-
-if __name__ == "__main__":
-    kafka_to_elasticsearch_flow.deploy(
-        name="Kafka to Elasticsearch Deployment",
-        work_pool_name="docker-agent-pool",
-        work_queue_name="docker-agent",
-        image=DeploymentImage(
-            name="jun-kafka2elk",
-            tag="0.1",
-            dockerfile="Dockerfile",
-            platform="linux/arm64",
-            buildargs={
-                       "SERVER_HOST": os.getenv("SERVER_HOST"),
-                       "KAFKA_TOPIC": os.getenv("KAFKA_TOPIC"),
-                       },
-        ),
-        schedule=(CronSchedule(cron="0 * * * *", timezone="Asia/Seoul")),
-        build=True,
-    )
+DeploymentSpec(
+    flow=kafka_to_elasticsearch_flow,
+    name="Kafka to Elasticsearch Deployment",
+    schedule=CronSchedule(cron="0 * * * *", timezone="Asia/Seoul"),
+    work_queue_name="default",
+    tags=["kafka", "elasticsearch"],
+    image={
+        "name": "team5/kafka-to-elasticsearch",
+        "tag": "0.1",
+        "dockerfile": "Dockerfile"
+    }
+)
