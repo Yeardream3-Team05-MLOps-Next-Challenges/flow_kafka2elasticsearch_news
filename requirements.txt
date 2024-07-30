@@ -1,9 +1,5 @@
-confluent-kafka
-beautifulsoup4
 websockets==12.0
 kafka-python==2.0.2
 requests==2.31.0
 prefect==2.18.3
-python-dotenv
-elasticsearch
 httpx
