@@ -7,7 +7,7 @@ from prefect.client.schemas.schedules import CronSchedule
 from Kafka_to_elasticsearch import kafka_to_elasticsearch_flow
 
 if __name__ == "__main__":
-    hun_fetch_and_send_stock_flow.deploy(
+    kafka_to_elasticsearch_flow.deploy(
         name="jun-kaf2elk",
         work_pool_name="docker-agent-pool",
         work_queue_name="docker-agent",
