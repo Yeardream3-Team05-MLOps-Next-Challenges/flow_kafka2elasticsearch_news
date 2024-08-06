@@ -18,7 +18,7 @@ if __name__ == "__main__":
             platform="linux/arm64",
             buildargs={
                         "PREFECT_API_URL": os.getenv("PREFECT_API_URL"),
-                        "DOCKER_NAMESPACE": os.getenv("DOCKER_NAMESPACE"),
+                        "PREFECT_DEFAULT_DOCKER_BUILD_NAMESPACE": os.getenv("PREFECT_DEFAULT_DOCKER_BUILD_NAMESPACE"),
                         "SERVER_HOST": os.getenv("SERVER_HOST"),
                         "KAFKA_TOPIC": os.getenv("KAFKA_TOPIC"),
                         "KAFKA_URL": os.getenv("KAFKA_URL"),
