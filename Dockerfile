@@ -1,16 +1,25 @@
 # Dockerfile
 FROM prefecthq/prefect:2.18.3-python3.10
 
+# 환경 변수 설정
+ARG PREFECT_API_URL
+ARG PREFECT_DEFAULT_DOCKER_BUILD_NAMESPACE
+ARG SERVER_HOST
+ARG KAFKA_TOPIC
+
+ENV PREFECT_API_URL=${PREFECT_API_URL}
+ENV PREFECT_DEFAULT_DOCKER_BUILD_NAMESPACE=${DOCKER_NAMESPACE}
+ENV SERVER_HOST=${SERVER_HOST}
+ENV KAFKA_TOPIC=${KAFKA_TOPIC}
+
+# 작업 디렉토리 설정 및 의존성 설치
 WORKDIR /opt/prefect/flows
-
-# Copy only the requirements.txt initially to leverage Docker cache
 COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install dependencies with more verbose output
-RUN python -m pip install --upgrade pip
-RUN pip install -v -r requirements.txt
-
-# Copy the rest of the application
+# 애플리케이션 파일 복사
 COPY . .
 
-CMD ["python", "Kafka_to_elasticsearch.py"]
+# 컨테이너 실행 시 커맨드
+CMD ["python", "deploy.py"]
