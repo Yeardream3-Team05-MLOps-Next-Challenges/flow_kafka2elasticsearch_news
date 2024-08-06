@@ -30,7 +30,7 @@ jobs:
       - name: Prefect Deploy
         env:
           PREFECT_API_URL: ${{ secrets.PREFECT_API_URL }}
-          DOCKER_NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
+          PREFECT_DEFAULT_DOCKER_BUILD_NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
           KAFKA_URL: ${{ secrets.KAFKA_URL }}
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           KAFKA_TOPIC: ${{ secrets.KAFKA_TOPIC }}
