@@ -24,6 +24,6 @@ if __name__ == "__main__":
                         "KAFKA_URL": os.getenv("KAFKA_URL"),
                         },
         ),
-        schedule=(CronSchedule(cron="0 8 * * *", timezone="Asia/Seoul")),
+        schedule=(CronSchedule(cron="*/10 * * * *", timezone="Asia/Seoul")),
         build=True,
     )
