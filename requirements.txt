@@ -4,3 +4,4 @@ requests==2.31.0
 prefect==2.18.3
 elasticsearch
 httpx
+griffe
