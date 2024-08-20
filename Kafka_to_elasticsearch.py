@@ -34,7 +34,7 @@ def consume_kafka_data():
 
 @task
 def send_to_elasticsearch(data):
-    es = Elasticsearch([{'host': SERVER_HOST, 'port': 19200, 'scheme': 'http'}])
+    es = Elasticsearch([{'host': SERVER_HOST, 'port': 19200}])
     for record in data:
         record_id = sha256(json.dumps(record, sort_keys=True).encode()).hexdigest()
         if not es.exists(index="news", id=record_id):
