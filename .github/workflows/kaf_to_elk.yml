@@ -36,6 +36,8 @@ jobs:
           KAFKA_TOPIC: ${{ secrets.KAFKA_TOPIC }}
         run: |
           pip install -r requirements.txt
+          pip install --no-deps prefect==2.18.3
+          pip install griffe==0.36.0
           python deploy.py
 
       - name: action-slack
