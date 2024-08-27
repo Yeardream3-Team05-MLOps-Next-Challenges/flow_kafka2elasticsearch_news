@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 SERVER_HOST = os.getenv('SERVER_HOST')
 KAFKA_TOPIC = 'news_1'
 KAFKA_GROUP_ID = 'consumer-group1'
-BATCH_SIZE = 100
+BATCH_SIZE = 4000
 
 @task
 def consume_kafka_data():
