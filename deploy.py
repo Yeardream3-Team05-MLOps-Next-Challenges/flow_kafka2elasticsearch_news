@@ -71,7 +71,7 @@ if __name__ == "__main__":
                         "KAFKA_URL": os.getenv("KAFKA_URL"),
                         },
         ),
-        schedule=(CronSchedule(cron="0 13 * * *", timezone="Asia/Seoul")),
+        schedule=(CronSchedule(cron="0,15,30,45 * * * *", timezone="Asia/Seoul")),
         build=True,
         job_variables={
             "PREFECT__FLOW_SETTINGS__concurrency_limit": 1,
