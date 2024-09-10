@@ -46,7 +46,7 @@ def consume_kafka_data():
         value_deserializer=lambda m: json.loads(m.decode('utf-8')),
         max_poll_interval_ms=300000,
         request_timeout_ms=20000,  # 20초
-        session_timeout_ms=10000   # 10초
+        session_timeout_ms=10000 # 10초
     )
     data = []
     try:
