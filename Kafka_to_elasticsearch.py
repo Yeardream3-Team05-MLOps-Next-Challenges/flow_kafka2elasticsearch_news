@@ -72,9 +72,9 @@ def send_to_elasticsearch(data):
     actions = []
     for record in data:
         actions.append({
-            "_op_type": "index"
+            "_op_type": "index",
             "_index": "news",
-            "_id": record['url']
+            "_id": record['url'],
             "_source": record
         })
     
