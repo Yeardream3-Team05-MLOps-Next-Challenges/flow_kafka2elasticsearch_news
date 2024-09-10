@@ -1,9 +1,7 @@
 import os
-
 from prefect import flow
 from prefect.deployments import DeploymentImage
 from prefect.client.schemas.schedules import CronSchedule
-
 from Kafka_to_elasticsearch import kafka_to_elasticsearch_flow
 
 if __name__ == "__main__":
