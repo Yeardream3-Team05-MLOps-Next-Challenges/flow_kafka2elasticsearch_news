@@ -100,7 +100,7 @@ from kafka import KafkaConsumer
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 from prefect import flow, task
-from prefect.schedules import CronSchedule
+from prefect.server.schemas.schedules import CronSchedule
 import json
 import os
 import logging
