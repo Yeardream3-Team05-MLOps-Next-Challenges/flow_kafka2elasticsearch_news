@@ -100,7 +100,7 @@ from kafka import KafkaConsumer
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 from prefect import flow, task
-from prefect.client.schemas.schedules import CronSchedule
+from prefect.schedules import CronSchedule
 import json
 import os
 import logging
@@ -110,7 +110,7 @@ import time
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # 환경 변수 설정
-SERVER_HOST = os.getenv('SERVER_HOST', 'localhost')
+SERVER_HOST = os.getenv('SERVER_HOST', 'localhost')  # 기본값으로 'localhost' 설정
 KAFKA_TOPIC = os.getenv('KAFKA_TOPIC', 'news_1')
 KAFKA_GROUP_ID = os.getenv('KAFKA_GROUP_ID', 'consumer-group1')
 BATCH_SIZE = int(os.getenv('BATCH_SIZE', 100))
@@ -133,14 +133,17 @@ news_mapping = {
 
 @task
 def consume_kafka_data():
+    """
+    Kafka Consumer에서 데이터를 가져오는 함수.
+    """
     consumer = KafkaConsumer(
         KAFKA_TOPIC,
         bootstrap_servers=[f'{SERVER_HOST}:19094'],
         group_id=KAFKA_GROUP_ID,
         auto_offset_reset='earliest',
-        enable_auto_commit=False,
+        enable_auto_commit=False,  # 수동으로 오프셋 커밋
         value_deserializer=lambda m: json.loads(m.decode('utf-8')),
-        max_poll_records=BATCH_SIZE
+        max_poll_records=BATCH_SIZE  # 한 번에 가져올 최대 레코드 수
     )
 
     messages = consumer.poll(timeout_ms=1000, max_records=BATCH_SIZE)
@@ -150,6 +153,9 @@ def consume_kafka_data():
 
 @task
 def send_to_elasticsearch(data):
+    """
+    데이터를 Elasticsearch로 전송하고 성공 시 오프셋을 커밋하는 함수.
+    """
     if not data:
         return
 
@@ -178,7 +184,7 @@ def send_to_elasticsearch(data):
 # Cron 스케줄 설정: 1시간마다 작업 실행
 schedule = CronSchedule(cron="0 */1 * * *", timezone="Asia/Seoul")
 
-@flow(name="Kafka to Elasticsearch Flow", schedule=schedule)
+@flow(name="Kafka to Elasticsearch Flow")
 def kafka_to_elasticsearch_flow():
     data = consume_kafka_data()
     if data:
