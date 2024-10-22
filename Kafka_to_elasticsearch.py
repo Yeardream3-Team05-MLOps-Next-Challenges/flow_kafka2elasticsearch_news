@@ -181,9 +181,6 @@ def send_to_elasticsearch(data):
             logging.error(f"Error during bulk operation: {e}, Attempt {attempt + 1} of {RETRY_COUNT}")
             time.sleep(2 ** attempt)
 
-# Cron 스케줄 설정: 1시간마다 작업 실행
-schedule = CronSchedule(cron="0 */1 * * *", timezone="Asia/Seoul")
-
 @flow(name="Kafka to Elasticsearch Flow")
 def kafka_to_elasticsearch_flow():
     data = consume_kafka_data()
