@@ -181,11 +181,11 @@ def send_to_elasticsearch(data):
             logging.error(f"Error during bulk operation: {e}, Attempt {attempt + 1} of {RETRY_COUNT}")
             time.sleep(2 ** attempt)
 
-@flow(name="Kafka to Elasticsearch Flow")
-def kafka_to_elasticsearch_flow():
-    data = consume_kafka_data()
-    if data:
-        send_to_elasticsearch(data)
+# @flow(name="Kafka to Elasticsearch Flow")
+# def kafka_to_elasticsearch_flow():
+#     data = consume_kafka_data()
+#     if data:
+#         send_to_elasticsearch(data)
 
-if __name__ == "__main__":
-    kafka_to_elasticsearch_flow()
+# if __name__ == "__main__":
+#     kafka_to_elasticsearch_flow()
